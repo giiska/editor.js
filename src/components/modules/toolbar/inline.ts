@@ -139,15 +139,13 @@ export default class InlineToolbar extends Module<InlineToolbarNodes> {
    * @param [needToShowConversionToolbar] - pass false to not to show Conversion Toolbar
    */
   public async tryToShow(needToClose = false, needToShowConversionToolbar = true): Promise<void> {
-    if (needToClose) {
-      this.close();
-    }
-
     if (!this.allowedToShow()) {
+      if (needToClose) {
+        this.close();
+      }
       return;
     }
 
-    await this.addToolsFiltered(needToShowConversionToolbar);
     this.move();
     this.open(needToShowConversionToolbar);
     this.Editor.Toolbar.close();
@@ -291,10 +289,12 @@ export default class InlineToolbar extends Module<InlineToolbarNodes> {
   /**
    * Shows Inline Toolbar
    */
-  private open(): void {
+  private async open(): void {
     if (this.opened) {
       return;
     }
+
+    await this.addToolsFiltered(needToShowConversionToolbar);
 
     /**
      * Show Inline Toolbar
